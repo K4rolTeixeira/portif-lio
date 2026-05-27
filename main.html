@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karolaine Teixeira | Data & Automação</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #0f0f1a;
+    --bg3: #141420;
+    --card: #12121e;
+    --card2: #1a1a2e;
+    --purple: #7c3aed;
+    --purple-light: #a855f7;
+    --purple-glow: #9333ea;
+    --purple-dim: #4c1d95;
+    --accent: #c084fc;
+    --text: #f4f0ff;
+    --text2: #b8afd4;
+    --text3: #6b5f8a;
+    --border: rgba(124,58,237,0.15);
+    --border2: rgba(124,58,237,0.3);
+    --glow: 0 0 40px rgba(124,58,237,0.25);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    background:var(--bg);
+    color:var(--text);
+    font-family:'DM Sans',sans-serif;
+    font-size:16px;
+    line-height:1.7;
+    overflow-x:hidden;
+  }
+  body::before {
+    content:'';
+    position:fixed;
+    inset:0;
+    background-image:
+      linear-gradient(rgba(124,58,237,0.03) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(124,58,237,0.03) 1px,transparent 1px);
+    background-size:60px 60px;
+    pointer-events:none;
+    z-index:0;
+  }
+  .blob1 {
+    position:fixed; top:-200px; left:-200px;
+    width:600px; height:600px;
+    background:radial-gradient(circle,rgba(124,58,237,0.12) 0%,transparent 70%);
+    border-radius:50%; pointer-events:none; z-index:0;
+    animation:floatBlob1 12s ease-in-out infinite;
+  }
+  .blob2 {
+    position:fixed; bottom:-200px; right:-100px;
+    width:500px; height:500px;
+    background:radial-gradient(circle,rgba(168,85,247,0.1) 0%,transparent 70%);
+    border-radius:50%; pointer-events:none; z-index:0;
+    animation:floatBlob2 15s ease-in-out infinite;
+  }
+  @keyframes floatBlob1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(60px,80px)} }
+  @keyframes floatBlob2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-60px,-60px)} }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(.8)} }
+  @keyframes floatCard { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+  @keyframes growBar { from{transform:scaleY(0)} to{transform:scaleY(1)} }
+
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    padding:1.25rem 2rem;
+    display:flex; align-items:center; justify-content:space-between;
+    background:rgba(10,10,15,0.85);
+    backdrop-filter:blur(16px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-logo {
+    font-family:'Syne',sans-serif; font-weight:800; font-size:1.1rem;
+    color:var(--text); text-decoration:none;
+    display:flex; align-items:center; gap:10px;
+  }
+  .nav-logo .dot {
+    width:8px; height:8px; background:var(--purple-light); border-radius:50%;
+    box-shadow:0 0 12px var(--purple-light); animation:pulse 2s ease-in-out infinite;
+  }
+  .nav-links { display:flex; gap:2rem; }
+  .nav-links a { color:var(--text2); text-decoration:none; font-size:.875rem; letter-spacing:.03em; transition:color .2s; }
+  .nav-links a:hover { color:var(--accent); }
+  .nav-cta {
+    padding:.5rem 1.25rem; border:1px solid var(--border2); border-radius:100px;
+    color:var(--accent); text-decoration:none; font-size:.875rem;
+    transition:all .2s; background:rgba(124,58,237,.08);
+  }
+  .nav-cta:hover { background:rgba(124,58,237,.2); border-color:var(--purple-light); box-shadow:0 0 20px rgba(124,58,237,.3); }
+
+  section { position:relative; z-index:1; }
+
+  /* HERO */
+  #hero {
+    min-height:100vh; display:flex; align-items:center;
+    padding:8rem 2rem 4rem; max-width:1200px; margin:0 auto;
+  }
+  .hero-inner {
+    display:grid; grid-template-columns:1fr 1fr;
+    gap:4rem; align-items:center; width:100%;
+  }
+  .hero-badge {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:6px 14px; border-radius:100px;
+    border:1px solid var(--border2); background:rgba(124,58,237,.08);
+    font-size:.8rem; color:var(--accent); letter-spacing:.08em;
+    text-transform:uppercase; margin-bottom:1.5rem;
+  }
+  .hero-badge::before {
+    content:''; width:6px; height:6px; background:var(--purple-light);
+    border-radius:50%; box-shadow:0 0 8px var(--purple-light);
+  }
+  .hero-title {
+    font-family:'Syne',sans-serif;
+    font-size:clamp(2.2rem,4.5vw,3.6rem);
+    font-weight:800; line-height:1.05;
+    margin-bottom:1.5rem; letter-spacing:-.02em;
+  }
+  .hero-title .highlight {
+    background:linear-gradient(135deg,#a855f7,#7c3aed,#c084fc);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .hero-desc { color:var(--text2); font-size:1.05rem; line-height:1.75; margin-bottom:2.5rem; max-width:500px; }
+  .hero-actions { display:flex; gap:1rem; flex-wrap:wrap; }
+  .btn-primary {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:.75rem 1.75rem; background:var(--purple); color:white;
+    text-decoration:none; border-radius:100px; font-weight:500; font-size:.9rem;
+    transition:all .25s; box-shadow:0 0 30px rgba(124,58,237,.4);
+  }
+  .btn-primary:hover { background:var(--purple-light); transform:translateY(-2px); box-shadow:0 0 50px rgba(168,85,247,.5); }
+  .btn-secondary {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:.75rem 1.75rem; border:1px solid var(--border2); color:var(--text2);
+    text-decoration:none; border-radius:100px; font-size:.9rem;
+    transition:all .25s; background:transparent;
+  }
+  .btn-secondary:hover { border-color:var(--purple-light); color:var(--accent); background:rgba(124,58,237,.08); }
+
+  /* Hero Visual */
+  .hero-visual { position:relative; }
+  .dashboard-card {
+    background:var(--card); border:1px solid var(--border); border-radius:20px;
+    padding:1.5rem; position:relative; overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,.5),var(--glow);
+    animation:floatCard 6s ease-in-out infinite;
+  }
+  .dashboard-card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:1px;
+    background:linear-gradient(90deg,transparent,rgba(168,85,247,.6),transparent);
+  }
+  .dash-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; }
+  .dash-title { font-size:.8rem; color:var(--text3); letter-spacing:.06em; text-transform:uppercase; }
+  .dash-dot { width:8px; height:8px; border-radius:50%; background:#22c55e; box-shadow:0 0 8px #22c55e; }
+  .kpi-row { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:1.5rem; }
+  .kpi { background:var(--card2); border-radius:12px; padding:1rem; border:1px solid var(--border); }
+  .kpi-label { font-size:.7rem; color:var(--text3); letter-spacing:.05em; text-transform:uppercase; margin-bottom:6px; }
+  .kpi-value { font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:700; color:var(--text); }
+  .kpi-delta { font-size:.7rem; color:#4ade80; margin-top:4px; }
+  .kpi-delta.neg { color:#f87171; }
+  .mini-chart { margin-top:.5rem; }
+  .chart-label { font-size:.7rem; color:var(--text3); margin-bottom:8px; letter-spacing:.05em; text-transform:uppercase; }
+  .bars { display:flex; align-items:flex-end; gap:4px; height:56px; }
+  .bar {
+    flex:1; border-radius:4px 4px 0 0;
+    background:linear-gradient(to top,var(--purple),var(--purple-light));
+    opacity:.7; transform-origin:bottom; animation:growBar 1s ease-out forwards;
+  }
+  .bar:nth-child(1){height:35%;animation-delay:.1s}
+  .bar:nth-child(2){height:55%;animation-delay:.2s}
+  .bar:nth-child(3){height:42%;animation-delay:.3s}
+  .bar:nth-child(4){height:70%;animation-delay:.4s}
+  .bar:nth-child(5){height:58%;animation-delay:.5s}
+  .bar:nth-child(6){height:88%;animation-delay:.6s;background:linear-gradient(to top,var(--accent),#e879f9);opacity:1}
+  .bar:nth-child(7){height:65%;animation-delay:.7s}
+  .float-card {
+    position:absolute; background:var(--card2); border:1px solid var(--border2);
+    border-radius:12px; padding:.75rem 1rem; font-size:.8rem;
+    box-shadow:0 8px 32px rgba(0,0,0,.4); backdrop-filter:blur(8px);
+  }
+  .float-card.top-right { top:-20px; right:-20px; animation:floatMini1 7s ease-in-out infinite; }
+  .float-card.bottom-left { bottom:-20px; left:-20px; animation:floatMini2 8s ease-in-out infinite; }
+  @keyframes floatMini1 { 0%,100%{transform:translate(0,0) rotate(1deg)} 50%{transform:translate(-8px,-16px) rotate(-1deg)} }
+  @keyframes floatMini2 { 0%,100%{transform:translate(0,0) rotate(-1deg)} 50%{transform:translate(8px,-12px) rotate(1deg)} }
+  .float-label { color:var(--text3); font-size:.7rem; margin-bottom:4px; }
+  .float-val { font-family:'Syne',sans-serif; font-weight:700; color:var(--accent); font-size:1.1rem; }
+
+  /* STATS */
+  .stats-bar { border-top:1px solid var(--border); border-bottom:1px solid var(--border); background:var(--bg2); padding:2rem; }
+  .stats-inner { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:repeat(4,1fr); gap:2rem; }
+  .stat-item { text-align:center; }
+  .stat-num {
+    font-family:'Syne',sans-serif; font-size:2.5rem; font-weight:800;
+    background:linear-gradient(135deg,var(--purple-light),var(--accent));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .stat-label { color:var(--text3); font-size:.85rem; margin-top:4px; }
+
+  /* SECTION */
+  .section-wrap { max-width:1200px; margin:0 auto; padding:6rem 2rem; }
+  .section-tag {
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:.75rem; color:var(--accent); letter-spacing:.1em; text-transform:uppercase; margin-bottom:1rem;
+  }
+  .section-tag::before { content:''; display:block; width:20px; height:1px; background:var(--purple-light); }
+  .section-title {
+    font-family:'Syne',sans-serif; font-size:clamp(1.75rem,3vw,2.5rem);
+    font-weight:800; line-height:1.1; letter-spacing:-.02em; margin-bottom:1rem;
+  }
+  .section-desc { color:var(--text2); font-size:1rem; max-width:520px; margin-bottom:3rem; }
+
+  /* SKILLS */
+  .skills-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.5rem; }
+  .skill-card {
+    background:var(--card); border:1px solid var(--border); border-radius:16px;
+    padding:1.75rem; position:relative; overflow:hidden; transition:all .3s;
+  }
+  .skill-card:hover { border-color:var(--border2); transform:translateY(-4px); box-shadow:0 20px 40px rgba(0,0,0,.3),0 0 30px rgba(124,58,237,.15); }
+  .skill-card::after {
+    content:''; position:absolute; top:0; left:0; right:0; height:2px;
+    background:linear-gradient(90deg,transparent,var(--purple),transparent);
+    opacity:0; transition:opacity .3s;
+  }
+  .skill-card:hover::after { opacity:1; }
+  .skill-icon { width:48px; height:48px; border-radius:12px; background:rgba(124,58,237,.15); border:1px solid var(--border2); display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin-bottom:1rem; }
+  .skill-name { font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; margin-bottom:.5rem; }
+  .skill-desc { color:var(--text2); font-size:.875rem; line-height:1.6; margin-bottom:1.25rem; }
+  .skill-bar-track { height:4px; background:rgba(255,255,255,.07); border-radius:100px; overflow:hidden; }
+  .skill-bar-fill {
+    height:100%; border-radius:100px;
+    background:linear-gradient(90deg,var(--purple),var(--accent));
+    width:0%; transition:width 1.2s cubic-bezier(.23,1,.32,1);
+    box-shadow:0 0 8px var(--purple-light);
+  }
+
+  /* PROJECTS */
+  .projects-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:1.5rem; }
+  .project-card {
+    background:var(--card); border:1px solid var(--border); border-radius:16px;
+    overflow:hidden; transition:all .3s; cursor:pointer;
+  }
+  .project-card:hover { border-color:var(--purple); transform:translateY(-4px); box-shadow:0 20px 50px rgba(0,0,0,.4),0 0 30px rgba(124,58,237,.2); }
+  .project-thumb { height:160px; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+  .project-thumb-bg { position:absolute; inset:0; }
+  .thumb-v1 { background:linear-gradient(135deg,#1a0533 0%,#2d1250 50%,#0f0f1a 100%); }
+  .thumb-v2 { background:linear-gradient(135deg,#0f1a0a 0%,#1a3312 50%,#0a0f0a 100%); }
+  .thumb-v3 { background:linear-gradient(135deg,#1a0a33 0%,#33104d 50%,#0f0f1a 100%); }
+  .thumb-v4 { background:linear-gradient(135deg,#0f1020 0%,#1a2040 50%,#0a0a15 100%); }
+  .thumb-v5 { background:linear-gradient(135deg,#1a1000 0%,#33220a 50%,#0f0a00 100%); }
+  .thumb-v6 { background:linear-gradient(135deg,#001a1a 0%,#003333 50%,#000f0f 100%); }
+  .thumb-chart { position:relative; z-index:1; display:flex; align-items:flex-end; gap:5px; height:75px; padding:0 1.5rem; }
+  .tc-bar { width:14px; border-radius:3px 3px 0 0; background:linear-gradient(to top,var(--purple),var(--accent)); opacity:.8; }
+  .tc-bar:nth-child(2n) { background:linear-gradient(to top,#5b21b6,#8b5cf6); }
+  .project-info { padding:1.5rem; }
+  .project-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:.75rem; }
+  .tag { font-size:.7rem; padding:3px 10px; border-radius:100px; background:rgba(124,58,237,.15); border:1px solid var(--border2); color:var(--accent); letter-spacing:.04em; }
+  .project-name { font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:700; margin-bottom:.5rem; }
+  .project-desc { color:var(--text2); font-size:.875rem; line-height:1.6; }
+  .project-link { display:inline-flex; align-items:center; gap:6px; margin-top:1rem; font-size:.8rem; color:var(--accent); text-decoration:none; transition:gap .2s; }
+  .project-link:hover { gap:10px; }
+
+  /* EXPERIENCE */
+  .timeline { position:relative; padding-left:1.5rem; }
+  .timeline::before {
+    content:''; position:absolute; top:0; bottom:0; left:0; width:1px;
+    background:linear-gradient(to bottom,transparent,var(--purple),var(--purple),transparent); opacity:.4;
+  }
+  .timeline-item { position:relative; padding-bottom:2.5rem; padding-left:2rem; }
+  .timeline-item::before {
+    content:''; position:absolute; left:-1.5rem; top:8px;
+    width:10px; height:10px; background:var(--purple);
+    border-radius:50%; box-shadow:0 0 16px var(--purple);
+    transform:translateX(calc(-50% + .5px));
+  }
+  .timeline-date { font-size:.75rem; color:var(--accent); letter-spacing:.08em; text-transform:uppercase; margin-bottom:.5rem; }
+  .timeline-role { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:700; margin-bottom:.25rem; }
+  .timeline-company { color:var(--purple-light); font-size:.9rem; margin-bottom:.75rem; }
+  .timeline-desc { color:var(--text2); font-size:.875rem; line-height:1.7; }
+
+  /* TOOLS */
+  .tools-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:1rem; margin-top:2rem; }
+  .tool-item { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1.25rem; text-align:center; transition:all .25s; }
+  .tool-item:hover { border-color:var(--border2); background:var(--card2); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.3); }
+  .tool-icon { font-size:1.75rem; margin-bottom:.5rem; }
+  .tool-name { font-size:.8rem; color:var(--text2); font-weight:500; }
+
+  /* CONTACT */
+  #contact { position:relative; overflow:hidden; }
+  #contact::before {
+    content:''; position:absolute; top:50%; left:50%;
+    transform:translate(-50%,-50%); width:600px; height:400px;
+    background:radial-gradient(ellipse,rgba(124,58,237,.12) 0%,transparent 70%); pointer-events:none;
+  }
+  .contact-inner { max-width:700px; margin:0 auto; text-align:center; padding:6rem 2rem; position:relative; }
+  .contact-form { display:flex; flex-direction:column; gap:1rem; margin-top:2.5rem; text-align:left; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  .form-group { display:flex; flex-direction:column; gap:6px; }
+  .form-label { font-size:.8rem; color:var(--text2); letter-spacing:.04em; }
+  .form-input {
+    background:var(--card); border:1px solid var(--border); border-radius:10px;
+    padding:.75rem 1rem; color:var(--text); font-family:'DM Sans',sans-serif;
+    font-size:.9rem; transition:all .2s; outline:none; resize:none;
+  }
+  .form-input:focus { border-color:var(--purple); box-shadow:0 0 0 3px rgba(124,58,237,.15); background:var(--card2); }
+  .form-input::placeholder { color:var(--text3); }
+  .btn-submit {
+    padding:.875rem 2rem; background:var(--purple); color:white; border:none;
+    border-radius:100px; font-family:'DM Sans',sans-serif; font-size:.9rem; font-weight:500;
+    cursor:pointer; transition:all .25s; box-shadow:0 0 30px rgba(124,58,237,.4); align-self:flex-start;
+  }
+  .btn-submit:hover { background:var(--purple-light); transform:translateY(-2px); box-shadow:0 0 50px rgba(168,85,247,.5); }
+
+  footer { border-top:1px solid var(--border); padding:2rem; text-align:center; color:var(--text3); font-size:.8rem; position:relative; z-index:1; }
+  footer a { color:var(--accent); text-decoration:none; }
+
+  .fade-up { opacity:0; transform:translateY(30px); transition:opacity .7s ease,transform .7s ease; }
+  .fade-up.visible { opacity:1; transform:translateY(0); }
+  .divider { border:none; height:1px; background:linear-gradient(90deg,transparent,var(--border2),transparent); margin:0; }
+
+  @media(max-width:768px){
+    .hero-inner{grid-template-columns:1fr;gap:3rem}
+    .hero-visual{display:none}
+    .form-row{grid-template-columns:1fr}
+    .stats-inner{grid-template-columns:repeat(2,1fr)}
+    nav{padding:1rem}
+    .nav-links{display:none}
+    .exp-grid{grid-template-columns:1fr!important}
+  }
+</style>
+</head>
+<body>
+
+<div class="blob1"></div>
+<div class="blob2"></div>
+
+<nav>
+  <a class="nav-logo" href="#">
+    <span class="dot"></span>
+    Karolaine Teixeira
+  </a>
+  <div class="nav-links">
+    <a href="#skills">Habilidades</a>
+    <a href="#projects">Projetos</a>
+    <a href="#experience">Experiência</a>
+    <a href="#contact">Contato</a>
+  </div>
+  <a href="#contact" class="nav-cta">Fale comigo</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">Disponível para novas oportunidades</div>
+      <h1 class="hero-title">
+        <span class="highlight">Data &amp; Automação</span><br>
+        &amp; Automação
+      </h1>
+      <p class="hero-desc">
+        Transformo processos financeiros e operacionais em fluxos automatizados e inteligentes — com VBA, Python e Power BI. Da análise de DRE à engenharia de software, conecto dados com decisão.
+      </p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn-primary">
+          Ver Projetos
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/in/karolaine-teixeira" target="_blank" class="btn-secondary">LinkedIn</a>
+        <a href="https://github.com/K4rolTeixeira" target="_blank" class="btn-secondary">GitHub</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div style="position:relative;padding:24px">
+        <div class="dashboard-card">
+          <div class="dash-header">
+            <span class="dash-title">DRE — Análise Mensal</span>
+            <span class="dash-dot"></span>
+          </div>
+          <div class="kpi-row">
+            <div class="kpi">
+              <div class="kpi-label">Receita Bruta</div>
+              <div class="kpi-value">R$4.2M</div>
+              <div class="kpi-delta">↑ 12.4%</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">EBITDA</div>
+              <div class="kpi-value">31.8%</div>
+              <div class="kpi-delta">↑ 2.1pp</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Desp. Operac.</div>
+              <div class="kpi-value">R$890K</div>
+              <div class="kpi-delta neg">↓ 5.3%</div>
+            </div>
+          </div>
+          <div class="mini-chart">
+            <div class="chart-label">Resultado mensal</div>
+            <div class="bars">
+              <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+              <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            </div>
+          </div>
+        </div>
+        <div class="float-card top-right">
+          <div class="float-label">Automações ativas</div>
+          <div class="float-val">6 ✓</div>
+        </div>
+        <div class="float-card bottom-left">
+          <div class="float-label">Tempo economizado</div>
+          <div class="float-val">~40h/mês</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item fade-up">
+      <div class="stat-num">6+</div>
+      <div class="stat-label">Automações desenvolvidas</div>
+    </div>
+    <div class="stat-item fade-up">
+      <div class="stat-num">3+</div>
+      <div class="stat-label">Anos de experiência</div>
+    </div>
+    <div class="stat-item fade-up">
+      <div class="stat-num">9+</div>
+      <div class="stat-label">Tecnologias dominadas</div>
+    </div>
+    <div class="stat-item fade-up">
+      <div class="stat-num">4°</div>
+      <div class="stat-label">Período — Eng. de Software</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-wrap">
+    <div class="section-tag">Especialidades</div>
+    <h2 class="section-title">Habilidades &amp; Competências</h2>
+    <p class="section-desc">Combinação única de visão financeira e capacidade técnica para automatizar, analisar e visualizar dados com precisão.</p>
+
+    <div class="skills-grid">
+      <div class="skill-card fade-up">
+        <div class="skill-icon">📊</div>
+        <div class="skill-name">Excel &amp; VBA</div>
+        <div class="skill-desc">Automação avançada de relatórios financeiros, macros para DRE, orçamento e departamento pessoal com redução drástica de retrabalho.</div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="95"></div></div>
+      </div>
+      <div class="skill-card fade-up">
+        <div class="skill-icon">📈</div>
+        <div class="skill-name">Power BI</div>
+        <div class="skill-desc">Criação de dashboards interativos para análise de vendas, controladoria e indicadores operacionais com DAX e modelagem de dados.</div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="82"></div></div>
+      </div>
+      <div class="skill-card fade-up">
+        <div class="skill-icon">🐍</div>
+        <div class="skill-name">Python</div>
+        <div class="skill-desc">Scripts para automação de processos, ETL, tratamento de dados contábeis e integração entre sistemas com Pandas e OpenPyXL.</div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="78"></div></div>
+      </div>
+      <div class="skill-card fade-up">
+        <div class="skill-icon">🗄️</div>
+        <div class="skill-name">SQL &amp; SQLite</div>
+        <div class="skill-desc">Consultas para extração e cruzamento de dados financeiros, criação de bases locais e integração com relatórios automatizados.</div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="75"></div></div>
+      </div>
+      <div class="skill-card fade-up">
+        <div class="skill-icon">☕</div>
+        <div class="skill-name">Java</div>
+        <div class="skill-desc">Desenvolvimento de aplicações orientadas a objetos voltadas à automação de processos e sistemas de controle interno.</div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="65"></div></div>
+      </div>
+      <div class="skill-card fade-up">
+        <div class="skill-icon">🔍</div>
+        <div class="skill-name">Análise Contábil</div>
+        <div class="skill-desc">Leitura e análise de balancetes, apuração de DRE, conciliação e suporte à Controladoria com visão estratégica de resultados.</div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="88"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-wrap">
+    <div class="section-tag">Portfólio</div>
+    <h2 class="section-title">Projetos Desenvolvidos</h2>
+    <p class="section-desc">Automações e análises reais aplicadas na Rede Olá com impacto direto na eficiência operacional e financeira.</p>
+
+    <div class="projects-grid">
+
+      <div class="project-card fade-up">
+        <div class="project-thumb">
+          <div class="project-thumb-bg thumb-v1"></div>
+          <div class="thumb-chart">
+            <div class="tc-bar" style="height:50%"></div>
+            <div class="tc-bar" style="height:75%"></div>
+            <div class="tc-bar" style="height:60%"></div>
+            <div class="tc-bar" style="height:90%"></div>
+            <div class="tc-bar" style="height:70%"></div>
+            <div class="tc-bar" style="height:85%"></div>
+          </div>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="tag">VBA</span><span class="tag">Excel</span><span class="tag">Power BI</span></div>
+          <div class="project-name">Automação de Relatório de Vendas</div>
+          <div class="project-desc">Desenvolvimento de macro VBA que consolida dados de vendas de múltiplas fontes, gera relatório formatado automaticamente e alimenta dashboard no Power BI — eliminando processo manual diário.</div>
+          <a class="project-link" href="#">Ver detalhes <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+
+      <div class="project-card fade-up">
+        <div class="project-thumb">
+          <div class="project-thumb-bg thumb-v3"></div>
+          <svg viewBox="0 0 200 75" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:1;width:80%">
+            <rect x="10" y="15" width="160" height="12" rx="3" fill="rgba(168,85,247,0.3)"/>
+            <rect x="10" y="15" width="118" height="12" rx="3" fill="rgba(168,85,247,0.7)"/>
+            <rect x="10" y="33" width="160" height="12" rx="3" fill="rgba(124,58,237,0.3)"/>
+            <rect x="10" y="33" width="145" height="12" rx="3" fill="rgba(124,58,237,0.7)"/>
+            <rect x="10" y="51" width="160" height="12" rx="3" fill="rgba(192,132,252,0.3)"/>
+            <rect x="10" y="51" width="95" height="12" rx="3" fill="rgba(192,132,252,0.7)"/>
+            <text x="175" y="24" fill="#c084fc" font-size="9" font-family="sans-serif">74%</text>
+            <text x="175" y="42" fill="#a855f7" font-size="9" font-family="sans-serif">91%</text>
+            <text x="175" y="60" fill="#c084fc" font-size="9" font-family="sans-serif">59%</text>
+          </svg>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="tag">VBA</span><span class="tag">Excel</span><span class="tag">ETL</span></div>
+          <div class="project-name">Automação e Análise de DRE</div>
+          <div class="project-desc">Sistema automatizado em VBA para consolidação do Demonstrativo de Resultado, com comparativo mensal/anual, variações percentuais e alertas de desvio orçamentário — substituindo horas de trabalho manual.</div>
+          <a class="project-link" href="#">Ver detalhes <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+
+      <div class="project-card fade-up">
+        <div class="project-thumb">
+          <div class="project-thumb-bg thumb-v4"></div>
+          <svg viewBox="0 0 200 75" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:1;width:80%">
+            <rect x="15" y="10" width="75" height="55" rx="5" fill="rgba(100,70,180,0.25)" stroke="rgba(168,85,247,0.4)" stroke-width="1"/>
+            <rect x="20" y="16" width="60" height="6" rx="2" fill="rgba(168,85,247,0.5)"/>
+            <rect x="20" y="26" width="45" height="4" rx="2" fill="rgba(124,58,237,0.4)"/>
+            <rect x="20" y="34" width="50" height="4" rx="2" fill="rgba(124,58,237,0.3)"/>
+            <rect x="20" y="42" width="40" height="4" rx="2" fill="rgba(124,58,237,0.3)"/>
+            <rect x="110" y="10" width="75" height="55" rx="5" fill="rgba(70,100,180,0.25)" stroke="rgba(100,140,247,0.4)" stroke-width="1"/>
+            <rect x="115" y="16" width="60" height="6" rx="2" fill="rgba(100,140,247,0.5)"/>
+            <rect x="115" y="26" width="50" height="4" rx="2" fill="rgba(80,120,237,0.4)"/>
+            <rect x="115" y="34" width="45" height="4" rx="2" fill="rgba(80,120,237,0.3)"/>
+            <rect x="115" y="42" width="55" height="4" rx="2" fill="rgba(80,120,237,0.3)"/>
+          </svg>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="tag">VBA</span><span class="tag">PowerPoint</span><span class="tag">Excel</span></div>
+          <div class="project-name">Automação de Apresentações DRE e Orçamento</div>
+          <div class="project-desc">Geração automática de apresentações executivas em PowerPoint a partir dos dados do Excel — com gráficos, tabelas e formatação padronizada gerados via VBA, prontas para reuniões de diretoria.</div>
+          <a class="project-link" href="#">Ver detalhes <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+
+      <div class="project-card fade-up">
+        <div class="project-thumb">
+          <div class="project-thumb-bg thumb-v2"></div>
+          <svg viewBox="0 0 200 75" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:1;width:80%">
+            <circle cx="50" cy="37" r="28" fill="none" stroke="rgba(74,222,128,0.2)" stroke-width="10"/>
+            <circle cx="50" cy="37" r="28" fill="none" stroke="rgba(74,222,128,0.8)" stroke-width="10" stroke-dasharray="105 71" stroke-dashoffset="0"/>
+            <circle cx="50" cy="37" r="16" fill="#0f1a0a"/>
+            <text x="50" y="41" text-anchor="middle" fill="#4ade80" font-size="10" font-weight="bold">78%</text>
+            <rect x="100" y="12" width="85" height="10" rx="3" fill="rgba(74,222,128,0.15)"/>
+            <rect x="100" y="12" width="66" height="10" rx="3" fill="rgba(74,222,128,0.6)"/>
+            <rect x="100" y="27" width="85" height="10" rx="3" fill="rgba(74,222,128,0.15)"/>
+            <rect x="100" y="27" width="78" height="10" rx="3" fill="rgba(74,222,128,0.5)"/>
+            <rect x="100" y="42" width="85" height="10" rx="3" fill="rgba(74,222,128,0.15)"/>
+            <rect x="100" y="42" width="55" height="10" rx="3" fill="rgba(74,222,128,0.4)"/>
+            <rect x="100" y="57" width="85" height="10" rx="3" fill="rgba(74,222,128,0.15)"/>
+            <rect x="100" y="57" width="70" height="10" rx="3" fill="rgba(74,222,128,0.45)"/>
+          </svg>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="tag">Python</span><span class="tag">VBA</span><span class="tag">SQLite</span></div>
+          <div class="project-name">Automação de Processos Operacionais</div>
+          <div class="project-desc">Mapeamento e automação de fluxos operacionais em diversas áreas da empresa — com scripts Python e macros VBA para eliminação de tarefas repetitivas e ganho de produtividade.</div>
+          <a class="project-link" href="#">Ver detalhes <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+
+      <div class="project-card fade-up">
+        <div class="project-thumb">
+          <div class="project-thumb-bg thumb-v5"></div>
+          <svg viewBox="0 0 200 75" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:1;width:80%">
+            <polyline points="10,55 35,42 60,48 85,30 110,38 135,20 160,28 185,18" stroke="#f59e0b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <polyline points="10,60 35,55 60,58 85,50 110,53 135,45 160,48 185,42" stroke="rgba(245,158,11,0.4)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4,3"/>
+            <circle cx="135" cy="20" r="4" fill="#f59e0b"/>
+            <circle cx="185" cy="18" r="4" fill="#fbbf24"/>
+          </svg>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="tag">Excel</span><span class="tag">VBA</span><span class="tag">Contabilidade</span></div>
+          <div class="project-name">Análise de Balancetes Contábeis</div>
+          <div class="project-desc">Ferramenta de análise e conciliação de balancetes com identificação automática de inconsistências, comparativo de períodos e relatório de variações para suporte à Controladoria.</div>
+          <a class="project-link" href="#">Ver detalhes <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+
+      <div class="project-card fade-up">
+        <div class="project-thumb">
+          <div class="project-thumb-bg thumb-v6"></div>
+          <svg viewBox="0 0 200 75" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:1;width:80%">
+            <rect x="10" y="10" width="180" height="16" rx="4" fill="rgba(34,211,238,0.1)" stroke="rgba(34,211,238,0.3)" stroke-width="1"/>
+            <rect x="14" y="14" width="8" height="8" rx="2" fill="rgba(34,211,238,0.6)"/>
+            <rect x="26" y="16" width="60" height="4" rx="2" fill="rgba(34,211,238,0.4)"/>
+            <rect x="130" y="16" width="30" height="4" rx="2" fill="rgba(34,211,238,0.3)"/>
+            <rect x="10" y="31" width="180" height="12" rx="3" fill="rgba(34,211,238,0.06)"/>
+            <rect x="14" y="34" width="50" height="5" rx="2" fill="rgba(34,211,238,0.25)"/>
+            <rect x="10" y="48" width="180" height="12" rx="3" fill="rgba(34,211,238,0.06)"/>
+            <rect x="14" y="51" width="65" height="5" rx="2" fill="rgba(34,211,238,0.25)"/>
+            <rect x="10" y="65" width="180" height="5" rx="2" fill="rgba(34,211,238,0.04)"/>
+          </svg>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="tag">VBA</span><span class="tag">Excel</span><span class="tag">Python</span></div>
+          <div class="project-name">Automação de Relatórios de RH</div>
+          <div class="project-desc">Sistema automatizado para geração de relatórios de Departamento Pessoal — folha de pagamento, ponto, férias e encargos — consolidando dados e entregando relatórios formatados com um clique.</div>
+          <a class="project-link" href="#">Ver detalhes <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- EXPERIENCE + TOOLS -->
+<section id="experience">
+  <div class="section-wrap">
+    <div class="exp-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start">
+      <div>
+        <div class="section-tag">Trajetória</div>
+        <h2 class="section-title">Experiência Profissional</h2>
+        <div class="timeline" style="margin-top:2.5rem">
+          <div class="timeline-item fade-up">
+            <div class="timeline-date">2022 — Presente</div>
+            <div class="timeline-role">Data & Automação</div>
+            <div class="timeline-company">Rede Olá</div>
+            <div class="timeline-desc">
+              Responsável pela automação de relatórios financeiros e operacionais utilizando VBA, Python e Excel avançado. Atuo na análise de DRE, balancetes contábeis e indicadores de vendas, além de desenvolver soluções para otimização de processos em múltiplas áreas — Financeiro, RH e Operações. Criação de apresentações executivas automatizadas para reuniões de diretoria.
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:2.5rem">
+          <div class="section-tag">Formação</div>
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:1rem">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:.75rem">
+              <div style="width:44px;height:44px;border-radius:12px;background:rgba(124,58,237,.15);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:1.3rem">🎓</div>
+              <div>
+                <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem">Engenharia de Software</div>
+                <div style="color:var(--purple-light);font-size:.875rem">UBM — Centro Universitário</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:.75rem;padding:4px 12px;border-radius:100px;background:rgba(124,58,237,.15);border:1px solid var(--border2);color:var(--accent)">4° Período</span>
+              <span style="font-size:.75rem;padding:4px 12px;border-radius:100px;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.2);color:#4ade80">Em andamento</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-tag">Stack</div>
+        <h2 class="section-title">Ferramentas &amp; Tecnologias</h2>
+        <div class="tools-grid">
+          <div class="tool-item fade-up"><div class="tool-icon">📊</div><div class="tool-name">Excel</div></div>
+          <div class="tool-item fade-up"><div class="tool-icon">⚡</div><div class="tool-name">VBA</div></div>
+          <div class="tool-item fade-up"><div class="tool-icon">🐍</div><div class="tool-name">Python</div></div>
+          <div class="tool-item fade-up"><div class="tool-icon">📈</div><div class="tool-name">Power BI</div></div>
+          <div class="tool-item fade-up"><div class="tool-icon">📉</div><div class="tool-name">Data Studio</div></div>
+          <div class="tool-item fade-up"><div class="tool-icon">🗄️</div><div class="tool-name">SQLite</div></div>
+          <div class="tool-item fade-up"><div class="tool-icon">🔄</div><div class="tool-name">ETL</div></div>
+          <div class="tool-item fade-up"><div class="tool-icon">☕</div><div class="tool-name">Java</div></div>
+          <div class="tool-item fade-up"><div class="tool-icon">🤖</div><div class="tool-name">Claude IA</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-tag" style="justify-content:center">Vamos conversar</div>
+    <h2 class="section-title" style="text-align:center">Pronta para contribuir com<br>seu time de dados</h2>
+    <p style="color:var(--text2);margin-top:1rem;font-size:.95rem">Aberta a novas oportunidades, projetos e colaborações. Respondo em até 24h.</p>
+
+    <form class="contact-form" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nome</label>
+          <input class="form-input" type="text" placeholder="Seu nome completo">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" placeholder="seu@email.com">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Assunto</label>
+        <input class="form-input" type="text" placeholder="Oportunidade, projeto, parceria...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mensagem</label>
+        <textarea class="form-input" rows="5" placeholder="Conte mais sobre o que você precisa..."></textarea>
+      </div>
+      <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+        <button type="submit" class="btn-submit">Enviar mensagem →</button>
+        <span style="color:var(--text3);font-size:.8rem">ou</span>
+        <a href="mailto:karolteixeira007@gmail.com" style="color:var(--accent);font-size:.875rem;text-decoration:none">karolteixeira007@gmail.com</a>
+      </div>
+    </form>
+
+    <div style="display:flex;justify-content:center;gap:1.5rem;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border)">
+      <a href="mailto:karolteixeira007@gmail.com" style="display:flex;align-items:center;gap:8px;color:var(--text2);text-decoration:none;font-size:.875rem;transition:color .2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text2)'">
+        <span>✉️</span> karolteixeira007@gmail.com
+      </a>
+      <a href="https://www.linkedin.com/in/karolaine-teixeira" target="_blank" style="display:flex;align-items:center;gap:8px;color:var(--text2);text-decoration:none;font-size:.875rem;transition:color .2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text2)'">
+        <span>💼</span> LinkedIn
+      </a>
+      <a href="https://github.com/K4rolTeixeira" target="_blank" style="display:flex;align-items:center;gap:8px;color:var(--text2);text-decoration:none;font-size:.875rem;transition:color .2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text2)'">
+        <span>🐙</span> GitHub
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2024 Karolaine Teixeira · Data & Automação &amp; Automação · Feito com 💜</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.classList.add('visible');
+        el.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
+          setTimeout(() => { bar.style.width = bar.dataset.width + '%'; }, 200);
+        });
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  document.querySelectorAll('.skill-bar-fill').forEach(bar => {
+    const rect = bar.getBoundingClientRect();
+    if (rect.top < window.innerHeight) {
+      setTimeout(() => { bar.style.width = bar.dataset.width + '%'; }, 600);
+    }
+  });
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.btn-submit');
+    btn.textContent = 'Mensagem enviada! ✓';
+    btn.style.background = '#059669';
+    btn.style.boxShadow = '0 0 30px rgba(5,150,105,0.4)';
+    setTimeout(() => {
+      btn.textContent = 'Enviar mensagem →';
+      btn.style.background = '';
+      btn.style.boxShadow = '';
+    }, 3000);
+  }
+
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    const pos = window.scrollY + 100;
+    document.querySelectorAll('section[id]').forEach(sec => {
+      if (pos >= sec.offsetTop && pos < sec.offsetTop + sec.offsetHeight) {
+        navLinks.forEach(a => {
+          a.style.color = a.getAttribute('href') === '#' + sec.id ? 'var(--accent)' : '';
+        });
+      }
+    });
+  });
+</script>
+</body>
+</html>
